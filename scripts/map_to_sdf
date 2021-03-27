@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+CREATE_SDF_SCRIPT="$(dirname $0)/create_sdf_model.py"
+CREATE_MESH_SCRIPT="$(dirname $0)/create_mesh.py"
+BLENDER=$1
+INPUT_MAP_META=$2
+OUTPUT_DIR=$3
+WALL_HEIGHT=${4:-"2.0"}
+
+if [[ $# -lt 3 ]]; then
+  echo "Usage: map_to_sdf <path/to/blender_executable> <map_meta_file> <output_dir>"
+  exit 1
+fi
+
+if ! [[ -x $BLENDER ]]; then
+  echo "\"$BLENDER\" is not an executable."
+  exit 1
+fi
+
+if ! [[ -f $INPUT_MAP_META ]]; then
+  echo "\"$INPUT_MAP_META\" is not a valid file."
+  exit 1
+fi
+
+MODEL_NAME=$(basename ${INPUT_MAP_META%.*})
+VERSION=${5:-"1.0"}
+AUTHOR=${6:-"Anonymous"}
+EMAIL=${7:-"anon@todo.todo"}
+DESCRIPTION=${8:-"This is a model for $MODEL_NAME"}
+
+# Create sdf model
+python $CREATE_SDF_SCRIPT \
+  -o $OUTPUT_DIR \
+  -n $MODEL_NAME \
+  --force \
+  --version $VERSION \
+  --author $AUTHOR \
+  --email $EMAIL \
+  --description "$DESCRIPTION"
+
+# Create mesh file
+$BLENDER --factory-startup -b -P $CREATE_MESH_SCRIPT -- \
+  -i $INPUT_MAP_META \
+  -o "$OUTPUT_DIR/$MODEL_NAME/meshes" \
+  --wall-height $WALL_HEIGHT

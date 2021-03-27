@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="blender_executable"/>
+
+  <arg name="map_meta_file" default="$(find map_to_sdf)/maps/robocup.yaml"/>
+  <arg name="output_dir" default="$(find map_to_sdf)/models"/>
+  <arg name="wall_height" default="2.0"/>
+
+  <arg name="version" default="1.0"/>
+  <arg name="author" default="Anonymous"/>
+  <arg name="email" default="anon@todo.todo"/>
+  <arg name="description" default=""/>
+
+  <node pkg="map_to_sdf" type="map_to_sdf" name="map_to_sdf" output="screen"
+        args="$(arg blender_executable) $(arg map_meta_file) $(arg output_dir) $(arg wall_height) $(arg version) $(arg author) $(arg email) $(arg description)"/>
+</launch>
