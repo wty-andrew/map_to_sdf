@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+  <env name="GAZEBO_MODEL_PATH" value="$(find map_to_sdf)/models:$(optenv GAZEBO_MODEL_PATH)"/>
+
+  <arg name="sdf_path" default="$(find map_to_sdf)/models/robocup/model.sdf"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" output="screen"
+        args="-sdf -file $(arg sdf_path) -model wall"/>
+</launch>
